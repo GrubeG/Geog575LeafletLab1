@@ -105,9 +105,6 @@ function createSequenceControls(map, attributes){
     map.addControl(new SequenceControl());   
     
     //create range input element (slider)
-    //$('#panel').append('<input class="range-slider" type="range">');
-    
-    //change text on sidebar
     $('#text').append('<input class="range-slider" type="range">');
     
     //set slider attributes
@@ -270,8 +267,6 @@ function updateLegend(map, attribute){
     };
 };
 
-
-
 //Step 10: Resize proportional symbols according to new attribute values
 function updatePropSymbols(map, attribute){
     map.eachLayer(function(layer){
@@ -326,6 +321,7 @@ function getData(map){
             createPropSymbols(response, map, attributes);
             createSequenceControls(map, attributes);
             createLegend(map, attributes);
+            
             
             console.log(attributes)
         }
