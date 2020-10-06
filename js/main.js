@@ -45,7 +45,14 @@ function createPopup(properties, attribute, layer, radius){
 
     //add formatted attribute to panel content string
     var year = attribute.split("_")[1];
-    popupContent += "<p><b>Population in " + year + ":</b> " + properties[attribute];
+    
+    if (properties[attribute] >1) {
+        var popDisplay = properties[attribute];
+        } else {
+        var popDisplay = "Unincorporated";
+        }
+    
+    popupContent += "<p><b>Population in " + year + ":</b> " + popDisplay;
 
     //replace the layer popup
     layer.bindPopup(popupContent, {
@@ -94,9 +101,16 @@ function createSequenceControls(map, attributes){
             $(container).append('<button class="skip" id="forward" title="Forward">Skip</button>');
             
             //kill any mouse event listeners on the map
-            $(container).on('mousedown dblclick', function(e){
+            $(container).on('mousewheel dblclick', function(e){
                 L.DomEvent.stopPropagation(e);
                 });
+            
+            $(container).mousedown(function () {
+                map.dragging.disable();
+            });
+            $(document).mouseup(function () {
+                map.dragging.enable();
+            });
 
             return container;
         }
@@ -310,8 +324,9 @@ function processData(data){
 
 //Import GeoJSON data
 function getData(map){
+    var WisCities = 'data/WisCities.geojson';
     //load the data
-    $.ajax("data/WisCities.geojson", {
+    $.ajax(WisCities, {
         dataType: "json",
         success: function(response){
             //create an attributes array
@@ -326,4 +341,8 @@ function getData(map){
             console.log(attributes)
         }
     });
+    
+    
+    
 }
+

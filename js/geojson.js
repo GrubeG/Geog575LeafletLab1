@@ -14,35 +14,47 @@ function createMap(){
 	attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
 	maxZoom: 16
 });
-        
+       
     var baseMaps = {
     "Topo": Esri_NatGeoWorldMap,
     "Black and White": CartoDB_Positron
+    };
+    
+    var WisCities = L.tileLayer('data/WisCities.geojson');
+    
+    var NonCities = L.tileLayer('data/NonCities.geojson');
+    
+    var overlayMaps = {
+    "Cities": WisCities,
+    "Non-Cities": NonCities
     };
     
     //create the map
     var map = L.map('mapid', {
         center: [44.5, -90],
         zoom: 7,
-        layers: [Esri_NatGeoWorldMap, CartoDB_Positron]
+        layers: [CartoDB_Positron]
     });
       
-    L.control.layers(baseMaps).addTo(map);
-
+    
     //call getData function
     getData(map);
+    
+    L.control.layers(baseMaps, overlayMaps).addTo(map);
+    
+    
 };
 
 //function to retrieve the data and place it on the map
 function getData(map){
 //Example 2.3 line 22...load the data
-    $.ajax("data/WisCities.geojson", {
+    $.ajax("data/NonCities.geojson", {
         dataType: "json",
         success: function(response){
             //create marker options
             var geojsonMarkerOptions = {
-                radius: 1,
-                fillColor: "#ff7800",
+                radius: 10,
+                fillColor: "#ff1800",
                 color: "#000",
                 weight: 1,
                 opacity: 1,
