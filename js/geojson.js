@@ -20,9 +20,13 @@ function createMap(){
     "Black and White": CartoDB_Positron
     };
     
-    var WisCities = L.tileLayer('data/WisCities.geojson');
     
-    var NonCities = L.tileLayer('data/NonCities.geojson');
+    var WisCities = new L.GeoJSON.AJAX('data/WisCities.geojson');
+    
+    var NonCities = new L.GeoJSON.AJAX('data/NonCities.geojson');
+    
+    var uneditableOverlays = {
+    };
     
     var overlayMaps = {
     "Cities": WisCities,
@@ -40,35 +44,28 @@ function createMap(){
     //call getData function
     getData(map);
     
-    L.control.layers(baseMaps, overlayMaps).addTo(map);
     
     
-};
+    
+    
 
-//function to retrieve the data and place it on the map
-function getData(map){
-//Example 2.3 line 22...load the data
-    $.ajax("data/NonCities.geojson", {
-        dataType: "json",
-        success: function(response){
-            //create marker options
-            var geojsonMarkerOptions = {
-                radius: 10,
-                fillColor: "#ff1800",
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            };
-
-            //create a Leaflet GeoJSON layer and add it to the map
-            L.geoJson(response, {
-                pointToLayer: function (feature, latlng){
-                    return L.circleMarker(latlng, geojsonMarkerOptions);
-                }
-            }).addTo(map);
-        }
-    });
+       
+    
+    
+    
+    
+    
+    //L.control.layers(baseMaps, overlayMaps).addTo(map);
+    
+    var appearanceControl = L.control.appearance(baseMaps, uneditableOverlays, overlayMaps, {
+        opacity:true,
+        remove:false,
+        color:true,
+        removeIcon:null});
+    
+	appearanceControl.addTo(map);
+    
+    
 };
 
 $(document).ready(createMap);
