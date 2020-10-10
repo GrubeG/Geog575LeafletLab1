@@ -169,8 +169,49 @@ function createSequenceControls(map, attributes){
     $('.range-slider').on('input', function(){
         //Step 6: get the new index value
         var index = $(this).val();
-        updatePropSymbols(map, attributes[index]);
-        console.log(index);
+        
+    
+    updatePropSymbols(map, attributes[index]);
+        
+    var WisCities = null
+        
+    var popAttribute = processData;
+    var searchAttribute = popAttribute[index]
+    console.log(attributes);
+    
+    
+    $( "#addButton" ).click(function() {
+        map.removeLayer(WisCities);
+        $.getJSON("data/WisCities.geojson",function(data){
+        // add GeoJSON layer to the map once the file is loaded
+            WisCities = L.geoJson(data,{
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.name);
+            }
+            }).addTo(map);
+        });
+    });
+
+    $( "#removeButton" ).click(function() {
+         map.removeLayer(popAttribute);
+    });
+
+    // Use $( "elementID") and the jQuery click listener method to create a filter
+    $( "#filterNonCities" ).click(function() {
+        map.removeLayer(WisCities);
+        $.getJSON('data/WisCities.geojson',function(data){
+            // add GeoJSON layer to the map once the file is loaded
+            WisCities = L.geoJson(data,{
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.name);
+            }, filter: function (feature, layer) {
+                    return feature.properties.attributes != "1";
+                }
+            }).addTo(map);
+        });
+        
+    });
+
         
     });
 };
@@ -327,40 +368,6 @@ function processData(data){
     return attributes;
 }
 
-function displayFilter(map, attributes, layer){
-    var WisCities = attributes;
-    console.log(attributes);
-    
-    
-    // add GeoJSON layer to the map once the file is loaded
-    $( "#addButton" ).click(function() {
-        map.removeLayer(layer); 
-        L.geoJson(data, {
-        pointToLayer: function(feature, layer){
-            return pointToLayer(feature, layer, attributes);
-        }
-    }).addTo(map);
-    });
-
-    $( "#removeButton" ).click(function() {
-         map.removeLayer(attributes);
-    });
-
-    // Use $( "elementID") and the jQuery click listener method to create a filter
-    $( "#filterNonCities" ).click(function() {
-        map.removeLayer(layer);
-        $.getJSON('data/WisCities.geojson',function(data){
-            // add GeoJSON layer to the map once the file is loaded
-            WisCities = L.geoJson(data,{
-                filter: function (feature, layer) {
-                    return feature.properties.attributes != "1";
-                }
-            }).addTo(map);
-        });
-        
-    });console.log(attributes);
-    
-}
 
 //Import GeoJSON data
 function getData(map){
@@ -376,7 +383,6 @@ function getData(map){
             createPropSymbols(response, map, attributes);
             createSequenceControls(map, attributes);
             createLegend(map, attributes);
-            displayFilter(map, attributes);
             
             
             console.log(attributes)
