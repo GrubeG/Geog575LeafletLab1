@@ -44,26 +44,9 @@ function createMap(){
     //call getData function
     getData(map);
     
-    
-    
-    
+L.control.layers(baseMaps, overlayMaps).addTo(map);
     
 
-       
-    
-    
-    
-    
-    
-    //L.control.layers(baseMaps, overlayMaps).addTo(map);
-    
-    var appearanceControl = L.control.appearance(baseMaps, uneditableOverlays, overlayMaps, {
-        opacity:true,
-        remove:false,
-        color:true,
-        removeIcon:null});
-    
-	appearanceControl.addTo(map);
     
     
 };
