@@ -21,9 +21,9 @@ function createMap(){
     };
     
     
-    var WisCities = new L.GeoJSON.AJAX('data/WisCities.geojson');
+    var WisCities = new L.tileLayer('data/WisCities.geojson');
     
-    var NonCities = new L.GeoJSON.AJAX('data/NonCities.geojson');
+    var NonCities = new L.tileLayer('data/NonCities.geojson');
     
     var uneditableOverlays = {
     };
