@@ -122,7 +122,7 @@ function createSequenceControls(map, attributes){
     map.addControl(new SequenceControl());   
     
     //create range input element (slider)
-    $('#text').append('<input class="range-slider" type="range">');
+    $('#panel').append('<input class="range-slider" type="range">');
     
     //set slider attributes
     $('.range-slider').attr({
@@ -133,8 +133,8 @@ function createSequenceControls(map, attributes){
     });
     
     //below Example 3.4...add skip buttons
-    $('#text').append('<button class="skip" id="reverse">Previous</button>');
-    $('#text').append('<button class="skip" id="forward">Next</button>');
+    $('#panel').append('<button class="skip" id="reverse">Previous</button>');
+    $('#panel').append('<button class="skip" id="forward">Next</button>');
     
     //Below Example 3.5...replace button content with images
     $('#reverse').html('<img src="img/reverse.png">');
@@ -157,27 +157,18 @@ function createSequenceControls(map, attributes){
             index = index < 0 ? 8 : index;
         }
 
-        //Step 8: update slider
-        $('.range-slider').val(index);
-        updatePropSymbols(map, attributes[index]);
-        console.log(index);
+        var WisCities = null
         
-
-    });
-
-    //Step 5: input listener for slider
-    $('.range-slider').on('input', function(){
-        //Step 6: get the new index value
-        var index = $(this).val();
-        
+    var searchAttribute = attributes[index]
     
-    updatePropSymbols(map, attributes[index]);
-        
-    var WisCities = null
-        
-    var popAttribute = processData;
-    var searchAttribute = popAttribute[index]
-    console.log(attributes);
+    $.getJSON("data/WisCities.geojson",function(data){
+        // add GeoJSON layer to the map once the file is loaded
+            WisCities = L.geoJson(data,{
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.name);
+            }
+            }).addTo(map);
+        });
     
     
     $( "#addButton" ).click(function() {
@@ -193,7 +184,7 @@ function createSequenceControls(map, attributes){
     });
 
     $( "#removeButton" ).click(function() {
-         map.removeLayer(popAttribute);
+         map.removeLayer(WisCities);
     });
 
     // Use $( "elementID") and the jQuery click listener method to create a filter
@@ -205,15 +196,31 @@ function createSequenceControls(map, attributes){
                 onEachFeature: function (feature, layer) {
                     layer.bindPopup(feature.properties.name);
             }, filter: function (feature, layer) {
-                    return feature.properties.attributes != "1";
+                    return feature.properties.Pop_1850 == "1";
                 }
             }).addTo(map);
         });
         
     });
-
         
+        //Step 8: update slider
+        $('.range-slider').val(index);
+        
+        
+        updatePropSymbols(map, attributes[index]);
+        console.log(index);    
+
     });
+
+    //Step 5: input listener for slider
+    $('.range-slider').on('input', function(){
+        //Step 6: get the new index value
+        var index = $(this).val();
+        
+    updatePropSymbols(map, attributes[index]);
+        
+    });  
+    
 };
 
 function createLegend(map, attributes){
