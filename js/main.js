@@ -41,7 +41,7 @@ function pointToLayer(feature, latlng, attributes){
 
 function createPopup(properties, attribute, layer, radius){
     //add city to popup content string
-    var popupContent = "<p><b>City:</b> " + properties.MCD_NAME + "</p>";
+    var popupContent = "<p><b>Location:</b> " + properties.MCD_NAME + "</p>";
 
     //add formatted attribute to panel content string
     var year = attribute.split("_")[1];
@@ -157,9 +157,14 @@ function createSequenceControls(map, attributes){
             index = index < 0 ? 8 : index;
         }
 
-        var WisCities = null
-        
-    var searchAttribute = attributes[index]
+    var WisCities = null
+    
+    var popAtt = attributes[index]
+    
+    var searchAtt = popAtt.valueOf("Pop")
+    console.log(searchAtt); 
+    
+    
     
     $.getJSON("data/WisCities.geojson",function(data){
         // add GeoJSON layer to the map once the file is loaded
@@ -188,7 +193,40 @@ function createSequenceControls(map, attributes){
     });
 
     // Use $( "elementID") and the jQuery click listener method to create a filter
-    $( "#filterNonCities" ).click(function() {
+    $( "#Cities" ).click(function() {
+        map.removeLayer(WisCities);
+        $.getJSON('data/WisCities.geojson',function(data){
+            // add GeoJSON layer to the map once the file is loaded
+            WisCities = L.geoJson(data,{
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.name);
+            }, filter: function (feature, layer) {
+                    return feature.properties.searchAtt != "1";
+                    console.log(index);
+                }
+            }).addTo(map);
+        });
+        
+    });
+        
+    // Use $( "elementID") and the jQuery click listener method to create a filter
+    $( "#Towns" ).click(function() {
+        map.removeLayer(WisCities);
+        $.getJSON('data/WisCities.geojson',function(data){
+            // add GeoJSON layer to the map once the file is loaded
+            WisCities = L.geoJson(data,{
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.name);
+            }, filter: function (feature, layer) {
+                    return feature.properties.Pop_1850 == "1";
+                }
+            }).addTo(map);
+        });
+        
+    });
+        
+    // Use $( "elementID") and the jQuery click listener method to create a filter
+    $( "#Unincorporated" ).click(function() {
         map.removeLayer(WisCities);
         $.getJSON('data/WisCities.geojson',function(data){
             // add GeoJSON layer to the map once the file is loaded

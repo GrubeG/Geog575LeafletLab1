@@ -21,9 +21,9 @@ function createMap(){
     };
     
     
-    var WisCities = L.tilelayer('data/NonCities.geojson')
+    var WisCities = new L.GeoJSON.AJAX('data/NonCities.geojson')
     
-    var NonCities = L.tilelayer('data/NonCities.geojson');
+    var NonCities = new L.GeoJSON.AJAX('data/NonCities.geojson');
     
     var overlayMaps = {
     "Cities": WisCities,
@@ -46,47 +46,7 @@ function createMap(){
     
     
 
-    var WisCities = null;
     
-    $.getJSON('data/WisCities.geojson',function(data){
-    // add GeoJSON layer to the map once the file is loaded
-    WisCities = L.geoJson(data,{
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-            }
-        }).addTo(map);
-    });
-    
-    $( "#addButton" ).click(function() {
-        map.removeLayer(WisCities);
-        $.getJSON('data/WisCities.geojson',function(data){
-            // add GeoJSON layer to the map once the file is loaded
-            WisCities = L.geoJson(data,{
-                onEachFeature: function (feature, layer) {
-                    layer.bindPopup(feature.properties.name);
-                }
-            }).addTo(map);
-        });
-    });
-
-     $( "#removeButton" ).click(function() {
-         map.removeLayer(WisCities);
-     });
-
-    // Use $( "elementID") and the jQuery click listener method to create a filter
-    $( "#filterNonCities" ).click(function() {
-        map.removeLayer(WisCities);
-        $.getJSON('data/WisCities.geojson',function(data){
-            // add GeoJSON layer to the map once the file is loaded
-            WisCities = L.geoJson(data,{
-                onEachFeature: function (feature, layer) {
-                    layer.bindPopup(feature.properties.name);
-                }, filter: function (feature, layer) {
-                    return feature.properties.Pop_1850 != "1";
-                }
-            }).addTo(map);
-        });
-    });   
     
     
     

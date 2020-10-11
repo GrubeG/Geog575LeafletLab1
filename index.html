@@ -23,7 +23,7 @@
     <h2><b>Growth of Wisconsin's 20 Biggest Cities</b></h2>
     		<h5><p>Since Wisconsin became a state in 1848, there have been seventeen national censuses taken in the United States. In that time, Wisconsin's population has moved from about 300,000 in 1850 to over 5.6 million in the 2010 census.  </p>
             <p>In 2020, a new census is taking place. I thought it would be interesting to look back at the current largest cities in Wisconsin, tracing their origins back to where they were in the initial census and how they've grown since. </p>
-            <p>In 1850, most of Wisconsin was sparsely settled, with most places in the state being rural and only a handful of places having more than 1,000 residents and only Milwaukee having more than 3,000. In the following decades, the population boomed and many of the current largest cities were incorporated by 1890 and had at least 10,000 residents, with the exception of the Milwaukee suburbs, which didn't start growing until the mid-1900s and were largely still townships</p>
+            <p>In 1850, most of Wisconsin was sparsely settled, with most places in the state being rural, unincorporated areas and only a handful of places having more than 1,000 residents and only Milwaukee having more than 3,000. In the following decades, the population boomed and many of the current largest cities were incorporated by 1890 and had at least 10,000 residents. The exception was the Milwaukee suburbs, which didn't start growing rapidly until the mid-1900s and were largely still townships.</p>
             <p>After World War II, the population trends moved toward suburban areas and the Milwaukee area saw many of its townships become substantial cities. Milwaukee itself has gotten smaller since the 1960s, while many of the other older cities grew at modest rates.</p>
             <p>Reaching the 2000s, places like Milwaukee and Racine continue to shrink, while Madison and Kenosha grow at larger rates than the rest of the state.</p>
     
@@ -34,9 +34,13 @@
 
 
 <div id="controls">
-    <button id="addButton">Show All Cities</button>
-    <button id="removeButton">Hide All Cities</button>
-    <button id="filterNonCities">RemoveNonCities</button>
+    <button id="addButton">Show All</button>
+    <button id="removeButton">Hide All</button>
+    <button id="Cities">Show Current Cities</button>
+    <button id="Towns">Show Current Towns</button>
+    <button id="Unincorporated">Show Unincorporated Areas</button>
+    
+    
 </div>
     
 		<!--put your external script links here-->
@@ -44,7 +48,7 @@
     <script type="text/javascript" src="lib/leaflet/leaflet-src.js"></script>
     <script type="text/javascript" src="lib/leaflet/leaflet-providers.js"></script>
     <!--script type="text/javascript" src="lib/leaflet/Leaflet.Control.Appearance/L.Control.Appearance.js"></script-->
-    <!--script type="text/javascript" src="lib/leaflet/leaflet-ajax/dist/leaflet.ajax.js"></script-->
+    <script type="text/javascript" src="lib/leaflet/leaflet-ajax/dist/leaflet.ajax.js"></script>
     <script type="text/javascript" src="js/geojson.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     
