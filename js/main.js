@@ -7,7 +7,7 @@ function pointToLayer(feature, latlng, attributes){
     
     //create marker options
     var options = {
-        fillColor: "#ff7800",
+        fillColor: "#01665e",
         color: "#000",
         weight: 1,
         opacity: 1,
@@ -16,6 +16,7 @@ function pointToLayer(feature, latlng, attributes){
 
     //For each feature, determine its value for the selected attribute
     var attValue = Number(feature.properties[attribute]);
+    
 
     //Give each feature's circle marker a radius based on its attribute value
     options.radius = calcPropRadius(attValue);
@@ -63,7 +64,7 @@ function createPopup(properties, attribute, layer, radius){
     //calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
     //scale factor to adjust symbol size evenly
-    var scaleFactor = .005;
+    var scaleFactor = .008;
     //area based on attribute value and scale factor
     var area = attValue * scaleFactor;
     //radius calculated based on area
@@ -121,8 +122,6 @@ function createSequenceControls(map, attributes){
 
     map.addControl(new SequenceControl());   
     
-    //create range input element (slider)
-    $('#panel').append('<input class="range-slider" type="range">');
     
     //set slider attributes
     $('.range-slider').attr({
@@ -133,8 +132,10 @@ function createSequenceControls(map, attributes){
     });
     
     //below Example 3.4...add skip buttons
-    $('#panel').append('<button class="skip" id="reverse">Previous</button>');
-    $('#panel').append('<button class="skip" id="forward">Next</button>');
+    $('#panel').append('<button id="Cities">Cities</button>');
+    $('#panel').append('<button id="Towns">Towns</button>');
+    $('#panel').append('<button id="Unincorporated">Settlement Areas</button>');
+    $('#panel').append('<button id="removeButton">Hide All</button>');
     
     //Below Example 3.5...replace button content with images
     $('#reverse').html('<img src="img/reverse.png">');
@@ -157,33 +158,44 @@ function createSequenceControls(map, attributes){
             index = index < 0 ? 8 : index;
         }
 
+    
     var WisCities = null
     
-    var popAtt = attributes[index]
-    
-    var searchAtt = popAtt.valueOf("Pop")
-    console.log(searchAtt); 
-    
-    
-    
-    $.getJSON("data/WisCities.geojson",function(data){
+    $.getJSON('data/WisMuniType.geojson',function(data){
+        var geojsonMarkerOptions = {
+                radius: 0,
+                fillColor: "#80cdc1",
+                color: "#000",
+                weight: 1,
+                opacity: 0,
+                fillOpacity: 0
+            };
         // add GeoJSON layer to the map once the file is loaded
             WisCities = L.geoJson(data,{
-                onEachFeature: function (feature, layer) {
-                    layer.bindPopup(feature.properties.name);
-            }
+                pointToLayer: function(feature, latlng){
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                }
             }).addTo(map);
         });
     
     
     $( "#addButton" ).click(function() {
         map.removeLayer(WisCities);
-        $.getJSON("data/WisCities.geojson",function(data){
+        $.getJSON('data/WisMuniType.geojson',function(data){
+            var geojsonMarkerOptions = {
+                radius: 2,
+                fillColor: "#c7eae5",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            };
+            
         // add GeoJSON layer to the map once the file is loaded
             WisCities = L.geoJson(data,{
-                onEachFeature: function (feature, layer) {
-                    layer.bindPopup(feature.properties.name);
-            }
+                pointToLayer: function(feature, latlng){
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                }
             }).addTo(map);
         });
     });
@@ -195,15 +207,27 @@ function createSequenceControls(map, attributes){
     // Use $( "elementID") and the jQuery click listener method to create a filter
     $( "#Cities" ).click(function() {
         map.removeLayer(WisCities);
-        $.getJSON('data/WisCities.geojson',function(data){
+        $.getJSON('data/WisMuniType.geojson',function(data){
+            var geojsonMarkerOptions = {
+                radius: 2,
+                fillColor: "#c7eae5",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            };
+            
+            var popAtt = processData(data)
+            var searchAtt = popAtt[index]
+            
             // add GeoJSON layer to the map once the file is loaded
             WisCities = L.geoJson(data,{
-                onEachFeature: function (feature, layer) {
-                    layer.bindPopup(feature.properties.name);
-            }, filter: function (feature, layer) {
-                    return feature.properties.searchAtt != "1";
-                    console.log(index);
-                }
+                pointToLayer: function(feature, latlng){
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                }, filter: function (feature) {
+                return feature.properties[searchAtt] == "City";    
+                },
+                
             }).addTo(map);
         });
         
@@ -212,13 +236,25 @@ function createSequenceControls(map, attributes){
     // Use $( "elementID") and the jQuery click listener method to create a filter
     $( "#Towns" ).click(function() {
         map.removeLayer(WisCities);
-        $.getJSON('data/WisCities.geojson',function(data){
+        $.getJSON('data/WisMuniType.geojson',function(data){
+            var geojsonMarkerOptions = {
+                radius: 2,
+                fillColor: "#c7eae5",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            };
+            
+            var popAtt = processData(data)
+            var searchAtt = popAtt[index]
+            
             // add GeoJSON layer to the map once the file is loaded
             WisCities = L.geoJson(data,{
-                onEachFeature: function (feature, layer) {
-                    layer.bindPopup(feature.properties.name);
-            }, filter: function (feature, layer) {
-                    return feature.properties.Pop_1850 == "1";
+                pointToLayer: function(feature, latlng){
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                }, filter: function (feature) {
+                    return feature.properties[searchAtt] == "Town";
                 }
             }).addTo(map);
         });
@@ -228,13 +264,24 @@ function createSequenceControls(map, attributes){
     // Use $( "elementID") and the jQuery click listener method to create a filter
     $( "#Unincorporated" ).click(function() {
         map.removeLayer(WisCities);
-        $.getJSON('data/WisCities.geojson',function(data){
+        $.getJSON('data/WisMuniType.geojson',function(data){
+            var geojsonMarkerOptions = {
+                radius: 2,
+                fillColor: "#c7eae5",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            };
+            
+            var popAtt = processData(data)
+            var searchAtt = popAtt[index]
             // add GeoJSON layer to the map once the file is loaded
             WisCities = L.geoJson(data,{
-                onEachFeature: function (feature, layer) {
-                    layer.bindPopup(feature.properties.name);
-            }, filter: function (feature, layer) {
-                    return feature.properties.Pop_1850 == "1";
+                pointToLayer: function(feature, latlng){
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                }, filter: function (feature) {
+                    return feature.properties[searchAtt] == "Non";
                 }
             }).addTo(map);
         });
@@ -245,8 +292,7 @@ function createSequenceControls(map, attributes){
         $('.range-slider').val(index);
         
         
-        updatePropSymbols(map, attributes[index]);
-        console.log(index);    
+        updatePropSymbols(map, attributes[index]);    
 
     });
 
@@ -275,23 +321,23 @@ function createLegend(map, attributes){
             $(container).append('<div id="temporal-legend">')
 
             //Step 1: start attribute legend svg string
-            var svg = '<svg id="attribute-legend" width="160px" height="80px">';
+            var svg = '<svg id="attribute-legend" width="160px" height="100px">';
             
             //array of circle names to base loop on
             var circles = {
-                max: 15,
-                mean: 40,
-                min: 65
+                max: 20,
+                mean: 55,
+                min: 90
             };
 
             //Step 2: loop to add each circle and text to svg string
             for (var circle in circles){
             //circle string
             svg += '<circle class="legend-circle" id="' + circle + 
-            '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="40"/>';
+            '" fill="#01665e" fill-opacity="0.8" stroke="#000000" cx="45"/>';
             
             //text string
-            svg += '<text id="' + circle + '-text" x="85" y="' + circles[circle] + '"></text>';
+            svg += '<text id="' + circle + '-text" x="95" y="' + circles[circle] + '"></text>';
             };
 
             //close svg string
@@ -361,7 +407,7 @@ function updateLegend(map, attribute){
 
         //Step 3: assign the cy and r attributes
         $('#'+key).attr({
-            cy: 70 - radius,
+            cy: 95 - radius,
             r: radius
         });
         
@@ -380,8 +426,6 @@ function updatePropSymbols(map, attribute){
             //update each feature's radius based on new attribute values
             var radius = calcPropRadius(props[attribute]);
             layer.setRadius(radius);  
-            
-            console.log(attribute);
             
             createPopup(props, attribute, layer, radius);
             updateLegend(map, attribute);
@@ -429,11 +473,8 @@ function getData(map){
             createSequenceControls(map, attributes);
             createLegend(map, attributes);
             
-            
             console.log(attributes)
-            
         }
-    });
-    
+    });  
 }
 

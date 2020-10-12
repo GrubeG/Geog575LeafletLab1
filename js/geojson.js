@@ -20,16 +20,6 @@ function createMap(){
     "Black and White": CartoDB_Positron
     };
     
-    
-    var WisCities = new L.GeoJSON.AJAX('data/NonCities.geojson')
-    
-    var NonCities = new L.GeoJSON.AJAX('data/NonCities.geojson');
-    
-    var overlayMaps = {
-    "Cities": WisCities,
-    "Non-Cities": NonCities
-    };
-    
     //create the map
     var map = L.map('mapid', {
         center: [44.5, -90],
@@ -41,21 +31,7 @@ function createMap(){
     //call getData function
     getData(map);
     
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    L.control.layers(baseMaps, overlayMaps).addTo(map);
-    
-    
-    
+    L.control.layers(baseMaps).addTo(map);
 };
 
 $(document).ready(createMap);

@@ -15,21 +15,21 @@
     border: solid gray 1px;
 }
 
-.legend-control-container {
-    width: 170px;
-    height: 130px;
-    font-size: 15px;
+#temporal-legend {
+    width: 200px;
+    height: 55px;
+    font-size: 20px;
     font-weight: bold;
     background-color: rgba(255,255,255,0.8);
     padding: 0px;
-    line-height: 55px;
+    line-height: 50px;
     text-align: center;
-    border: solid gray 1px;
+    
 }
 
-.text-control-container {
+.legend-control-container {
     width: 200px;
-    height: 130px;
+    height: 155px;
     font-size: 15px;
     font-weight: bold;
     background-color: rgba(255,255,255,0.8);
@@ -45,7 +45,7 @@
     padding: 10px;
     position:absolute;
     overflow: scroll;
-    background-color: rgba(255,255,155,0.8);
+    background-color: rgba(128,205,193,0.8);
     display: inline-block;
     vertical-align: top;
     text-align: center;
@@ -68,12 +68,13 @@
     width: 74%;
     height: 22px;
     padding: 5px;
-    background-color: rgba(155,155,155,0.8);
+    background-color: rgba(128,205,193,0.8);
     display: inline-block;
     vertical-align: top;
     text-align: center;
     line-height: 20px;
 }
+
 .range-slider {
     width: 50%;
 }
