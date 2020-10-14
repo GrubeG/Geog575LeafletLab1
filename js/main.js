@@ -184,8 +184,8 @@ function filterControl (map, attributes, index){
                 fillColor: "#80cdc1",
                 color: "#000",
                 weight: 1,
-                opacity: 0,
-                fillOpacity: 0
+                opacity: 1,
+                fillOpacity: 1
             };
         // add GeoJSON layer to the map once the file is loaded
             WisCities = L.geoJson(data,{
