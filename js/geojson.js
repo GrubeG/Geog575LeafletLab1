@@ -27,7 +27,6 @@ function createMap(){
         layers: [CartoDB_Positron]
     });
       
-    
     //call getData function
     getData(map);
     

@@ -132,14 +132,13 @@ function createSequenceControls(map, attributes){
     });
     
     //below Example 3.4...add skip buttons
-    $('#panel').append('<button id="Cities">Cities</button>');
-    $('#panel').append('<button id="Towns">Towns</button>');
-    $('#panel').append('<button id="Unincorporated">Settlement Areas</button>');
-    $('#panel').append('<button id="removeButton">Hide All</button>');
+    
     
     //Below Example 3.5...replace button content with images
     $('#reverse').html('<img src="img/reverse.png">');
     $('#forward').html('<img src="img/forward.png">');
+    
+    
     
     //Below Example 3.6 in createSequenceControls()
     //Step 5: click listener for buttons
@@ -158,39 +157,40 @@ function createSequenceControls(map, attributes){
             index = index < 0 ? 8 : index;
         }
 
+        filterControl (map, attributes, index)
+        
+        //Step 8: update slider
+        $('.range-slider').val(index);
+        
+        
+        updatePropSymbols(map, attributes[index]);    
+
+    });
+
+    //Step 5: input listener for slider
+    $('.range-slider').on('input', function(){
+        //Step 6: get the new index value
+        var index = $(this).val();
+        
+    updatePropSymbols(map, attributes[index]);
+        
+    });  
+    
+};
+
+function filterControl (map, attributes, index){
     
     var WisCities = null
     
     $.getJSON('data/WisMuniType.geojson',function(data){
         var geojsonMarkerOptions = {
-                radius: 0,
+                radius: .1,
                 fillColor: "#80cdc1",
                 color: "#000",
                 weight: 1,
-                opacity: 0,
-                fillOpacity: 0
-            };
-        // add GeoJSON layer to the map once the file is loaded
-            WisCities = L.geoJson(data,{
-                pointToLayer: function(feature, latlng){
-                    return L.circleMarker(latlng, geojsonMarkerOptions);
-                }
-            }).addTo(map);
-        });
-    
-    
-    $( "#addButton" ).click(function() {
-        map.removeLayer(WisCities);
-        $.getJSON('data/WisMuniType.geojson',function(data){
-            var geojsonMarkerOptions = {
-                radius: 2,
-                fillColor: "#c7eae5",
-                color: "#000",
-                weight: 1,
                 opacity: 1,
-                fillOpacity: 0.8
+                fillOpacity: 1
             };
-            
         // add GeoJSON layer to the map once the file is loaded
             WisCities = L.geoJson(data,{
                 pointToLayer: function(feature, latlng){
@@ -198,14 +198,16 @@ function createSequenceControls(map, attributes){
                 }
             }).addTo(map);
         });
-    });
 
     $( "#removeButton" ).click(function() {
+         WisCities.length = 0;
          map.removeLayer(WisCities);
     });
 
+        
     // Use $( "elementID") and the jQuery click listener method to create a filter
     $( "#Cities" ).click(function() {
+        clearArray(WisCities);
         map.removeLayer(WisCities);
         $.getJSON('data/WisMuniType.geojson',function(data){
             var geojsonMarkerOptions = {
@@ -219,6 +221,7 @@ function createSequenceControls(map, attributes){
             
             var popAtt = processData(data)
             var searchAtt = popAtt[index]
+            
             
             // add GeoJSON layer to the map once the file is loaded
             WisCities = L.geoJson(data,{
@@ -287,25 +290,7 @@ function createSequenceControls(map, attributes){
         });
         
     });
-        
-        //Step 8: update slider
-        $('.range-slider').val(index);
-        
-        
-        updatePropSymbols(map, attributes[index]);    
-
-    });
-
-    //Step 5: input listener for slider
-    $('.range-slider').on('input', function(){
-        //Step 6: get the new index value
-        var index = $(this).val();
-        
-    updatePropSymbols(map, attributes[index]);
-        
-    });  
-    
-};
+}
 
 function createLegend(map, attributes){
     var LegendControl = L.Control.extend({
@@ -473,7 +458,6 @@ function getData(map){
             createSequenceControls(map, attributes);
             createLegend(map, attributes);
             
-            console.log(attributes)
         }
     });  
 }

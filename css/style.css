@@ -49,6 +49,7 @@
     display: inline-block;
     vertical-align: top;
     text-align: center;
+    font-family: "Open Sans", Arial, sans-serif;
     line-height: 20px;
 }
 
@@ -67,8 +68,8 @@
 #controls {
     width: 74%;
     height: 22px;
-    padding: 5px;
-    background-color: rgba(128,205,193,0.8);
+    padding: 7px;
+    background-color: rgba(216,179,101,0.8);
     display: inline-block;
     vertical-align: top;
     text-align: center;
