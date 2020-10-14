@@ -2,8 +2,6 @@
 function pointToLayer(feature, latlng, attributes){
     //Determine which attribute to visualize with proportional symbols
     var attribute = attributes[0];
-    //check
-    console.log(attribute);
     
     //create marker options
     var options = {
@@ -162,7 +160,6 @@ function createSequenceControls(map, attributes){
         //Step 8: update slider
         $('.range-slider').val(index);
         
-        
         updatePropSymbols(map, attributes[index]);    
 
     });
@@ -179,7 +176,6 @@ function createSequenceControls(map, attributes){
 };
 
 function filterControl (map, attributes, index){
-    
     var WisCities = null
     
     $.getJSON('data/WisMuniType.geojson',function(data){
@@ -188,8 +184,8 @@ function filterControl (map, attributes, index){
                 fillColor: "#80cdc1",
                 color: "#000",
                 weight: 1,
-                opacity: 1,
-                fillOpacity: 1
+                opacity: 0,
+                fillOpacity: 0
             };
         // add GeoJSON layer to the map once the file is loaded
             WisCities = L.geoJson(data,{
@@ -207,7 +203,6 @@ function filterControl (map, attributes, index){
         
     // Use $( "elementID") and the jQuery click listener method to create a filter
     $( "#Cities" ).click(function() {
-        clearArray(WisCities);
         map.removeLayer(WisCities);
         $.getJSON('data/WisMuniType.geojson',function(data){
             var geojsonMarkerOptions = {
@@ -436,8 +431,6 @@ function processData(data){
         }
     }
 
-    //check result
-    console.log(attributes);
 
     return attributes;
 }
@@ -457,6 +450,7 @@ function getData(map){
             createPropSymbols(response, map, attributes);
             createSequenceControls(map, attributes);
             createLegend(map, attributes);
+            filterControl (map, attributes)
             
         }
     });  
